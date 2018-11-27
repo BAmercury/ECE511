@@ -41,16 +41,17 @@ yd
 hold on;
 stem(Td*t,yd, 'r o','DisplayName', 'Forward Difference');
 yd = [];
-yd(length(Tc)) = 1;
+yd(1) = 1;
 Td = [];
+Td(length(Tc)) = 0;
 % Backward Difference
-for i = length(Tc):-1:2
+for i = 1:length(Tc)
     yd(i-1) = (1-(t*A))*yd(i) -(t*B*0);
-    Td(i) = length(Tc)-i;
+    Td(i-1) = i;
 end
 yd
 hold on;
-stem(Td*t,yd, 'b o','DisplayName', 'Forward Difference');
+stem(Td*t,yd, ' o','DisplayName', 'Forward Difference');
 
     
 
