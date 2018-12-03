@@ -75,12 +75,13 @@ fprintf("\nThe continous time signal is stable because as t approaches infinity,
 fprintf("\nThe discrete time signal is stabel for any time T > 0 can be seen from the graph as well for T = 0.1, 0.3, 0.5, the amplitude also approaches 0")
 
 %% Part 3a
-
+figu
 fprintf("\nClose form continuous signal is x(t) = e^(A*t) * x(0) \n y(t) = x(t)")
 I = imread('d.jpg');
 imshow(I)
 
 %% Part 3b
+figure
 hold on
 initial(sys, IC, 0:t:2)
 ed = stem(Td*t,yd, '*', 'DisplayName', 'Exact Discrete');
@@ -88,7 +89,7 @@ ed.Color = 'red';
 legend('CT','DT  T=0.1')
 
 %% Part 3c
-hold on
+figure
 hold on
 initial(sys, IC, 0:0.1:2)
 
@@ -139,7 +140,7 @@ figure
 step(sys, 0:0.01:2);
 hold on;
 U = 1;
-yd(1) = 0
+yd(1) = 0;
 t = 0.1;
 Ad = expm(-5*t);
 Bd = ((-2/5)*expm(-5*t)) + (2/5);
@@ -190,8 +191,9 @@ imshow(I)
 fprintf("within the range of stability, samller the period, the higher the lower the error between the estimates\n")
 fprintf("this is because as you sample more frequently the estimates gets better matched to the original signal\n")
 fprintf("Larger the K value, more time for the method to converge hence lowering the error")
-fprintf("The result for this is different comapred f
-%%
+fprintf("The result for this is different comapred to Case 1 part 3d because 3d was an exact solution, while this is an estimate, so 3d has no error component, while forward and backward methods do")
+fprintf("\n see next part for graph")
+%% Part 3c
 close all
 A = [-5.0];
 B = [2.0]; 
@@ -261,7 +263,7 @@ figure
 hold on
 stem(k, en_forward)
 stem(k, en_backward)
-title("T = 0.1")
+title("Error Norm for T = 0.1")
 xlabel("k")
 ylabel("error")
 legend("Foward", "Backward")
@@ -275,7 +277,7 @@ figure
 hold on
 stem(k, en_forward)
 stem(k, en_backward)
-title("T = 0.3")
+title("Error Norm for T = 0.3")
 xlabel("k")
 ylabel("error")
 legend("Foward", "Backward")
@@ -289,9 +291,16 @@ figure
 hold on
 stem(k, en_forward)
 stem(k, en_backward)
-title("T = 0.05")
+title("Error Norm for T = 0.05")
 xlabel("k")
 ylabel("error")
 legend("Foward", "Backward")
+%% Part 4a
+figure
+I = imread('case2part4af.jpg');
+imshow(I)
+figure
+I = imread('case2part4ab.jpg');
+imshow(I)
 
-    
+%% Part 4b

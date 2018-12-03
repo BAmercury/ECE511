@@ -33,6 +33,7 @@ fprintf("State Equation: X[k+1] = Ad*X[k] + Bd*U[k]")
 fprintf("Y[k] = X[k]")
 
 %% Part 2
+figure 
 hold on
 initial(sys, IC, 0:0.1:2)
 
@@ -75,20 +76,21 @@ fprintf("\nThe continous time signal is stable because as t approaches infinity,
 fprintf("\nThe discrete time signal is stabel for any time T > 0 can be seen from the graph as well for T = 0.1, 0.3, 0.5, the amplitude also approaches 0")
 
 %% Part 3a
-
+figure
 fprintf("\nClose form continuous signal is x(t) = e^(A*t) * x(0) \n y(t) = x(t)")
 I = imread('d.jpg');
 imshow(I)
 
 %% Part 3b
+figure
 hold on
-initial(sys, IC, 0:t:2)
+initial(sys, IC, 0:0.1:2)
 ed = stem(Td*t,yd, '*', 'DisplayName', 'Exact Discrete');
 ed.Color = 'red';
 legend('CT','DT  T=0.1')
 
 %% Part 3c
-hold on
+figure
 hold on
 initial(sys, IC, 0:0.1:2)
 
@@ -139,7 +141,7 @@ figure
 step(sys, 0:0.01:2);
 hold on;
 U = 1;
-yd(1) = 0
+yd(1) = 0;
 t = 0.1;
 Ad = expm(-5*t);
 Bd = ((-2/5)*expm(-5*t)) + (2/5);
