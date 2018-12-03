@@ -135,7 +135,12 @@ figure
 I = imread('case1err.jpg');
 imshow(I)
 %% Part 4a
-
+figure
+I = imread('case1part4ct.jpg');
+imshow(I)
+figure
+I = imread('case1part4dt.jpg');
+imshow(I)
 %% Part 4b
 figure
 step(sys, 0:0.01:2);
@@ -304,4 +309,206 @@ figure
 I = imread('case2part4ab.jpg');
 imshow(I)
 
-%% Part 4b
+%% Part 4b1
+close all
+A = [-5.0];
+B = [2.0]; 
+C = [1.0];
+D = [];
+IC = 1;
+U = 0;
+figure
+% Exact Difference
+Ad = expm(-5*t);
+Bd = ((-2/5)*expm(-5*t)) + (2/5);
+
+sys = ss(A,B,C,D);
+[Yc, Tc] = initial(sys, IC, 0:0.01:2);
+hold on;
+initial(sys, IC, 0:0.01:2)
+ybd = [];
+yd = [];
+yd(1) = 1;
+Td = [];
+Td(1) = 0;
+% Exact Discrete
+t = .1;
+for i = 1:length(Tc)
+    yd(i+1) = Ad*yd(i) +(Bd*U);
+    Td(i+1) = i; % save corresponding discrete time integer index
+end
+hold on;
+ed = stem(Td(1:11)*t,yd(1:11), '*', 'DisplayName', 'Exact Discrete');
+ed.Color = 'red';
+
+yfd = [];
+yfd(1) = 1;
+Td = [];
+Td(1) = 0;
+% Forward Difference
+for i = 1:length(Tc)
+    yfd(i+1) = (1+(t*A))*yfd(i) +(B*t*U);
+    Td(i+1) = i;
+end
+hold on;
+fd = stem(Td(1:11)*t,yfd(1:11), 'filled','DisplayName', 'Forward Difference');
+fd.Color = 'green';
+ybd = zeros(1, length(Td));
+ybd(1) = 1;
+% Backward Difference
+for k = 2:length(Td)
+    z = 0;
+    for m = 1:k
+        z = z + 1/(1-A*t)^(k-m+1) * (B*t*U);
+    end
+    ybd(k) = ybd(1)*(1/((1-A*t)^k)) + z;
+end
+bd = stem(Td(1:11)*t,ybd(1:11), 'filled','DisplayName', 'Backward Difference');
+bd.Color = 'blue';
+legend('CT','CT(kT)','Fwd','Back')
+title('Discrete methods for T = 0.1')
+figure
+initial(sys, IC, 0:0.01:2)
+t = .3;
+for i = 1:length(Tc)
+    yd(i+1) = Ad*yd(i) +(Bd*U);
+    Td(i+1) = i; % save corresponding discrete time integer index
+end
+hold on;
+ed = stem(Td(1:11)*t,yd(1:11), '*', 'DisplayName', 'Exact Discrete');
+ed.Color = 'red';
+
+yfd = [];
+yfd(1) = 1;
+Td = [];
+Td(1) = 0;
+% Forward Difference
+for i = 1:length(Tc)
+    yfd(i+1) = (1+(t*A))*yfd(i) +(B*t*U);
+    Td(i+1) = i;
+end
+hold on;
+fd = stem(Td(1:11)*t,yfd(1:11), 'filled','DisplayName', 'Forward Difference');
+fd.Color = 'green';
+ybd = zeros(1, length(Td));
+ybd(1) = 1;
+% Backward Difference
+for k = 2:length(Td)
+    z = 0;
+    for m = 1:k
+        z = z + 1/(1-A*t)^(k-m+1) * (B*t*U);
+    end
+    ybd(k) = ybd(1)*(1/((1-A*t)^k)) + z;
+end
+bd = stem(Td(1:11)*t,ybd(1:11), 'filled','DisplayName', 'Backward Difference');
+bd.Color = 'blue';
+legend('CT','CT(kT)','Fwd','Back')
+title('Discrete methods for T = 0.3')
+figure
+t = .05;
+initial(sys, IC, 0:0.01:2)
+for i = 1:length(Tc)
+    yd(i+1) = Ad*yd(i) +(Bd*U);
+    Td(i+1) = i; % save corresponding discrete time integer index
+end
+hold on;
+ed = stem(Td(1:11)*t,yd(1:11), '*', 'DisplayName', 'Exact Discrete');
+ed.Color = 'red';
+
+yfd = [];
+yfd(1) = 1;
+Td = [];
+Td(1) = 0;
+% Forward Difference
+for i = 1:length(Tc)
+    yfd(i+1) = (1+(t*A))*yfd(i) +(B*t*U);
+    Td(i+1) = i;
+end
+hold on;
+fd = stem(Td(1:11)*t,yfd(1:11), 'filled','DisplayName', 'Forward Difference');
+fd.Color = 'green';
+ybd = zeros(1, length(Td));
+ybd(1) = 1;
+% Backward Difference
+for k = 2:length(Td)
+    z = 0;
+    for m = 1:k
+        z = z + 1/(1-A*t)^(k-m+1) * (B*t*U);
+    end
+    ybd(k) = ybd(1)*(1/((1-A*t)^k)) + z;
+end
+bd = stem(Td(1:11)*t,ybd(1:11), 'filled','DisplayName', 'Backward Difference');
+bd.Color = 'blue';
+legend('CT','CT(kT)','Fwd','Back')
+title('Discrete methods for T = 0.05')
+%% Part 4b2
+close all
+A = [-5.0];
+B = [2.0]; 
+C = [1.0];
+D = [];
+IC = 1;
+U = 0;
+figure
+% Exact Difference
+Ad = expm(-5*t);
+Bd = ((-2/5)*expm(-5*t)) + (2/5);
+
+sys = ss(A,B,C,D);
+[Yc, Tc] = initial(sys, IC, 0:0.01:2);
+hold on;
+initial(sys, IC, 0:0.01:2)
+ybd = [];
+yd = [];
+yd(1) = 1;
+Td = [];
+Td(1) = 0;
+% Exact Discrete
+t = .1;
+for i = 1:length(Tc)
+    yd(i+1) = Ad*yd(i) +(Bd*U);
+    Td(i+1) = i; % save corresponding discrete time integer index
+end
+hold on;
+ed = stem(Td(1:11)*t,yd(1:11), '*', 'DisplayName', 'Exact Discrete');
+ed.Color = 'red';
+
+yfd = [];
+yfd(1) = 1;
+Td = [];
+Td(1) = 0;
+% Forward Difference
+for i = 1:length(Tc)
+    yfd(i+1) = (1+(t*A))*yfd(i) +(B*t*U);
+    Td(i+1) = i;
+end
+hold on;
+fd = stem(Td(1:11)*t,yfd(1:11), 'filled','DisplayName', 'Forward Difference');
+fd.Color = 'green';
+ybd = zeros(1, length(Td));
+ybd(1) = 1;
+% Backward Difference
+t = 0.3;
+for k = 2:length(Td)
+    z = 0;
+    for m = 1:k
+        z = z + 1/(1-A*t)^(k-m+1) * (B*t*U);
+    end
+    ybd(k) = ybd(1)*(1/((1-A*t)^k)) + z;
+end
+bd = stem(Td(1:11)*t,ybd(1:11), 'filled','DisplayName', 'Backward Difference');
+bd.Color = 'blue';
+legend('CT','CT(kT)','Fwd T=0.1','Back T=0.3')
+title('Discrete methods for T = 0.1')
+%% Part 4b3
+
+% the results shows that backwards difference will work for all T > -1/3
+% and forward difference will only work for T = 0<T<1/3 
+% inorder to have the same negative poles for the transfer function, the T
+% for forward has to be less than 0.2 and the T for backward have to be
+% greater than 0.2 so in the graph, T for forward was 0.1 and backward was
+% 0.3 and this will have the same poles for the transfer function. 
+
+% also for forward difference the it grows very instable as T increases,
+% and the threshhold is 0.3333 before it becomes unstable and this can be
+% seen in the graph. 
