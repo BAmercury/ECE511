@@ -1,4 +1,5 @@
-%% Fundamentals of Systems 1 (ECES511)
+%% Fundamentals of Systems
+% Compiled MATLAB examples for reference
 
 
 
@@ -257,66 +258,69 @@ Cb = [2 3]
 %%
 % get characteristic equation same for both representations
 CEA = poly(A)
-%%  Compute feedback gain based on characteristic equation coeffients
 
-% desired closed loop ce = s^2 + 11s + 30 = (s+5)(s+6)
-%  desired - actual high-1  ro low
+
+
+%%
+%  Compute feedback gain based on characteristic equation coeffients
+%%
+% Our desired closed loop ds = s^2 + 11s + 30 = (s+5)(s+6)
+%  (desired - actual)
 CED = [1 11 30]
 
 DD = CED-CEA
+%%
 % strip off first element s^2 coefficient
-
 kb = DD(2:3)
-
 kb = [8 28]  % state feedback in CCF
-%%   check eigenvalues using kb
+%%
+%   check eigenvalues using kb
 eig((Ab-Bb*kb)) % verify correct
 
-%% find P = Cbar * inv (C) and k for original system
-
+%%
+% find P = Cbar * inv (C) and k for original system
 Cbar = [Bb, Ab*Bb]
 CT = [B, A*B]
-
 P = Cbar*inv(CT) % this is transformation
-
 k= kb*P
 
-%% verify k with original system
-
+%%
+% verify k with original system
 eig((A-B*k))
-
-%%  Verify matrices using transform, P are same as by inspection of G(s)
-
+%%
+%  Verify matrices using transform, P are same as by inspection of G(s)
 AA = P*A*inv(P)
 BB = P*B
-
 CC = C*inv(P)
 
-%% compare step responses of both systems without state feedback
+%%
+% compare step responses of both systems without state feedback
 % same y so they should yiled same results even though states are different
-
 sys_orig = ss(A, B, C, 0);
 sys_CCF = ss(Ab, Bb, Cb, 0);
 figure
 step(sys_orig, 'ro', sys_CCF, 'bx')
 title('step response original and CCF system no feedback')
 legend('diagnol form', 'CCF')
-%% compare step responses systems of both systems with state feedback
-% same y so they should yiled same results even though states are different
 
+%%
+% compare step responses systems of both systems with state feedback
+% same y so they should yiled same results even though states are different
 sys_orig_f = ss((A-B*k), B, C, 0);
 sys_CCF_f = ss((Ab-Bb*kb), Bb, Cb, 0);
 figure
 step(sys_orig_f, 'ro', sys_CCF_f, 'bx')
 title('step response original and CCF system with state feedback')
 legend('diagnol form', 'CCF')
-
-%% show transfer functions 
+%%
+% show transfer functions 
 % original transfer function
 gg1= tf(sys_orig_f)
+%%
 % transfer function with state feedback
 gg2 = tf(sys_CCF_f)
 
+%% 
 %% look at components of transfer function with state feedback
 s = tf('s')
 
@@ -332,11 +336,10 @@ hold on
 step((g1+g2), 'r.')
 legend('-7/(s+5)', '9/(s+6)', 'sum')
 title('components contributing to step response')
-%% Phase plane analysis for system without and with state feedback
+%%
+% Phase plane analysis for system without and with state feedback
 % this is solution to homogeneous system x_dot = Ax with x(0) or zdot=
 % (A-Bk)z  note with state feedback we saw overshoot in y(t)
-
-
 t = 0:.01:10;  % create time vector
 u = zeros(size(t)); % input u = 0;
 x0 = [10;10] % initial condition;
@@ -356,3 +359,97 @@ plot(0, 0, 'k*', 'LineWidth', 2')
 legend('original', 'with state fdbk', 'IC', 'origin','Location', 'Best')
 title('Phase Plane Trajectories')
 grid on
+
+%% Demo for CCF and Finding state feedback gains
+
+%%
+% Define original system
+A = [-1 0; 0 -2]
+B = [1;1]
+C = [1 1]
+
+%%
+% In CCF form
+Ac = [-3 -2; 1 0]
+Bc = [1;0]
+Cc = [2 3]
+%%
+%  desired ce s^2 + 11s +30
+kc = [(11-3) (30-2)]
+%%
+% in controllable canonical form
+eig(Ac -Bc*kc)
+
+%%
+% need to find k corresponding to orignal realization
+Ct = ctrb(A,B)
+Cct = ctrb(Ac, Bc)
+% P = C-bar inv(C)
+P = Cct*inv(Ct)
+% k for original system
+k = kc*P
+
+eig(A-B*k)
+
+%% Solving Inverted Pendulum Problem using Lyapunov Method
+
+%%
+% Define original system
+A = [0 1 0 0; 0 0 -1 0; 0 0 0 1; 0 0 5 0]
+b = [0 1 0 -2]'
+
+%% 
+% define the F matrix to be observable canonical form
+F = [-5 1 0 0; -10.5 0 1 0; -11 0 0 1; -5 0 0 0]
+kb = [1 0 0 0]
+
+%%
+% alternate way to define F
+% coeffs = poly(A); %get characteristic equation coefficients this is lenght 5
+% Fa = [-5 1 0 0; -10.5 0 1 0; -11 0 0 1; -5 0 0 0]
+%%
+% 
+%     X = LYAP(A,B,C) solves the Sylvester equation:
+%  
+%         A*X + X*B + C = 0
+% we need to solve AT - TF = bk_bar
+T = lyap(A, -F, -b*kb)
+k = kb*inv(T)
+%% 
+% check eigenvalues
+eig(A -b*k)
+
+%% State Feedback example
+%% 
+% given xdot = Ax + bu
+A = [1 2; 3, 1]
+B = [ 0; 1]
+
+%% 
+% eigenvalues of A
+eig(A)
+
+%% 
+% desired poles
+p1 = -1-2*j
+p2 = conj(p1)
+
+%% 
+% compute k
+
+k = acker(A, B, [p1;p2])
+
+%% 
+% check ce
+
+eig(A-B*k)
+
+%% 
+% more commands
+
+%%
+% characteristic coefficients
+C_coeff = poly(A-B*k)
+%%
+% roots 
+roots(C_coeff)
