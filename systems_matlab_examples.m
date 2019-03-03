@@ -453,3 +453,4 @@ C_coeff = poly(A-B*k)
 %%
 % roots 
 roots(C_coeff)
+
