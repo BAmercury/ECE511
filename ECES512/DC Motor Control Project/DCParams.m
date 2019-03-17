@@ -8,3 +8,10 @@ Kt = 10.02
 Ra = 1.64
 La = 3.39e-3
 Kv = 0.0708
+
+%%
+% Find transfer function from the simulink model
+arg = linmod('DC_motor_model')
+[NUM, DEN] = ss2tf(arg.a, arg.b, arg.c, arg.d);
+tfsys = tf(NUM, DEN)
+step(tf_sys)
